@@ -1,12 +1,18 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.jvm.tasks.Jar
 
 plugins {
     java
     kotlin("jvm") version "1.2.51"
+    application
 }
 
 group = "com.arrowmaker.proxy"
 version = "0.1.0"
+
+application {
+    mainClassName = "com.arrowmaker.proxy.AppKt"
+}
 
 repositories {
     mavenCentral()
@@ -28,4 +34,21 @@ configure<JavaPluginConvention> {
 }
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+val fatJar = task("fatJar", type = Jar::class) {
+    baseName = "${project.name}-fat"
+    manifest {
+        attributes["Implementation-Title"] = "Gradle Jar File Example"
+        attributes["Implementation-Version"] = version
+        attributes["Main-Class"] = "com.arrowmaker.proxy.AppKt"
+    }
+    from(configurations.runtime.map { if (it.isDirectory) it else zipTree(it) })
+    with(tasks["jar"] as CopySpec)
+}
+
+tasks {
+    "build" {
+        dependsOn(fatJar)
+    }
 }
