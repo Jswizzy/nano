@@ -18,7 +18,7 @@ class FrontendHandler(private val remoteAddress: InetSocketAddress) : SimpleChan
 
     override fun channelRead0(ctx: ChannelHandlerContext, msg: ByteBuf) {
         if (channelFuture.isDone) {
-            //todo process buffer
+            channelFuture.channel().writeAndFlush(msg) //proxy
         }
     }
 }

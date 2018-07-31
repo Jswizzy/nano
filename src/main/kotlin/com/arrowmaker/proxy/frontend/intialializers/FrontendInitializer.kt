@@ -1,5 +1,7 @@
 package com.arrowmaker.proxy.frontend.intialializers
 
+import com.arrowmaker.proxy.codec.NanoDecoder
+import com.arrowmaker.proxy.codec.NanoToCotEncoder
 import com.arrowmaker.proxy.frontend.handlers.FrontendHandler
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
@@ -12,6 +14,8 @@ class FrontendInitializer(private val remoteAddress: InetSocketAddress): Channel
     override fun initChannel(ch: SocketChannel) {
         ch.pipeline().addLast(
                 LoggingHandler(LogLevel.INFO),
+                NanoDecoder(),
+                NanoToCotEncoder(),
                 FrontendHandler(remoteAddress))
     }
 }

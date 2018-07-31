@@ -11,7 +11,7 @@ group = "com.arrowmaker.proxy"
 version = "0.1.0"
 
 application {
-    mainClassName = "com.arrowmaker.proxy.AppKt"
+    mainClassName = "AppKt"
 }
 
 repositories {
@@ -41,7 +41,7 @@ val fatJar = task("fatJar", type = Jar::class) {
     manifest {
         attributes["Implementation-Title"] = "Gradle Jar File Example"
         attributes["Implementation-Version"] = version
-        attributes["Main-Class"] = "com.arrowmaker.proxy.AppKt"
+        attributes["Main-Class"] = "AppKt"
     }
     from(configurations.runtime.map { if (it.isDirectory) it else zipTree(it) })
     with(tasks["jar"] as CopySpec)
