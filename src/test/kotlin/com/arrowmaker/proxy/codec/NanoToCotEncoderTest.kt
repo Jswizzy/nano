@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufUtil
 import io.netty.buffer.Unpooled
 import io.netty.channel.embedded.EmbeddedChannel
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.nio.charset.Charset
@@ -24,14 +25,13 @@ class NanoToCotEncoderTest {
         assertTrue(channel.finish())
 
         val outbound = channel.readOutbound<ByteBuf>()
-        println(ByteBufUtil.prettyHexDump(outbound))
+        //println(ByteBufUtil.prettyHexDump(outbound))
 
         val len = outbound.readableBytes()
         val cot = outbound.getCharSequence(0, len, Charset.forName("UTF-8"))
-        println(cot)
 
+        assertEquals("<event version='2.0' uid='300234011831350' type='a-f-G-U-C' time='2018-07-26T12:50:31.00Z' start='2018-07-26T12:50:31.00Z' stale='2018-07-26T13:05:31.00Z' how='m-g'><point lat='38.8945351' lon='-77.4381043' hae='0' ce='9999999' le='9999999'/><detail><contact callsign='Nano'/></detail></event>", cot)
         outbound.release()
-
         buf.release()
     }
 }

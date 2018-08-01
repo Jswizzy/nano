@@ -6,7 +6,7 @@ import io.netty.channel.nio.NioEventLoopGroup
 import java.net.InetSocketAddress
 
 
-class Proxy(private val localPort: Int, private val remoteAddress: InetSocketAddress) {
+class NanoToCotServer(private val localPort: Int, private val remoteAddress: InetSocketAddress) {
     fun start() {
          println("Proxying *: $localPort to ${remoteAddress.address}:${remoteAddress.port}...")
 
