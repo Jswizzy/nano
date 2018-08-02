@@ -1,17 +1,18 @@
-package com.arrowmaker.proxy.codec
+package com.arrowmaker.proxy.handlers
 
 import com.arrowmaker.proxy.model.IpHead
-import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
-import io.netty.handler.codec.MessageToByteEncoder
-import java.nio.charset.Charset
+import io.netty.channel.socket.DatagramPacket
+import io.netty.handler.codec.MessageToMessageEncoder
+import io.netty.util.CharsetUtil
+import java.net.InetSocketAddress
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 
-class NanoToCotEncoder : MessageToByteEncoder<IpHead>() {
-    override fun encode(ctx: ChannelHandlerContext, msg: IpHead, out: ByteBuf) {
+class NanoToCotEncoder(private val remoteAddress: InetSocketAddress) : MessageToMessageEncoder<IpHead>() {
+    override fun encode(ctx: ChannelHandlerContext, msg: IpHead, out: MutableList<Any>) {
         with (msg) {
             val timeString = epochToCotString(time)
             val staleTime = epochToCotString(time) { it.plusMinutes(15) }
@@ -19,10 +20,16 @@ class NanoToCotEncoder : MessageToByteEncoder<IpHead>() {
             with (main.p3) {
 
                 val cot = "<event version='2.0' uid='$imei' type='a-f-G-U-C' time='$timeString' " +
-                        "start='$timeString' stale='$staleTime' how='m-g'><point lat='$lat' lon='$lon' hae='0' " +
+                        "run='$timeString' stale='$staleTime' how='m-g'><point lat='$lat' lon='$lon' hae='0' " +
                         "ce='9999999' le='9999999'/><detail><contact callsign='Nano'/>" +
                         "</detail></event>"
-                out.writeCharSequence(cot, Charset.forName("UTF-8"))
+                println("Sending msg: $cot")
+
+                val bytes = cot.toByteArray(CharsetUtil.UTF_8)
+                val buf = ctx.alloc().buffer(bytes.size)
+                buf.writeBytes(bytes)
+
+                out.add(DatagramPacket(buf, remoteAddress))
             }
         }
     }

@@ -1,10 +1,8 @@
-package com.arrowmaker.proxy.codec
+package com.arrowmaker.proxy.handlers
 
 import com.arrowmaker.proxy.model.IpHead
-import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.socket.DatagramPacket
-import io.netty.handler.codec.ByteToMessageDecoder
 import io.netty.handler.codec.MessageToMessageDecoder
 
 

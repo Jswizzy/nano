@@ -1,13 +1,15 @@
 package com.arrowmaker.proxy.codec
 
+import com.arrowmaker.proxy.handlers.NanoToCotEncoder
 import com.arrowmaker.proxy.model.IpHead
-import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufUtil
 import io.netty.buffer.Unpooled
 import io.netty.channel.embedded.EmbeddedChannel
+import io.netty.channel.socket.DatagramPacket
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.net.InetSocketAddress
 import java.nio.charset.Charset
 
 
@@ -19,18 +21,19 @@ class NanoToCotEncoderTest {
         val buf = Unpooled.copiedBuffer(bytes)
 
         val nanoMsg = IpHead.from(buf)
+        val remoteAddress = InetSocketAddress(8080)
 
-        val channel = EmbeddedChannel(NanoToCotEncoder())
+        val channel = EmbeddedChannel(NanoToCotEncoder(remoteAddress))
         assertTrue(channel.writeOutbound(nanoMsg))
         assertTrue(channel.finish())
 
-        val outbound = channel.readOutbound<ByteBuf>()
+        val outbound = channel.readOutbound<DatagramPacket>()
         //println(ByteBufUtil.prettyHexDump(outbound))
 
-        val len = outbound.readableBytes()
-        val cot = outbound.getCharSequence(0, len, Charset.forName("UTF-8"))
+        val len = outbound.content().readableBytes()
+        val cot = outbound.content().getCharSequence(0, len, Charset.forName("UTF-8"))
 
-        assertEquals("<event version='2.0' uid='300234011831350' type='a-f-G-U-C' time='2018-07-26T12:50:31.00Z' start='2018-07-26T12:50:31.00Z' stale='2018-07-26T13:05:31.00Z' how='m-g'><point lat='38.8945351' lon='-77.4381043' hae='0' ce='9999999' le='9999999'/><detail><contact callsign='Nano'/></detail></event>", cot)
+        assertEquals("<event version='2.0' uid='300234011831350' type='a-f-G-U-C' time='2018-07-26T12:50:31.00Z' run='2018-07-26T12:50:31.00Z' stale='2018-07-26T13:05:31.00Z' how='m-g'><point lat='38.8945351' lon='-77.4381043' hae='0' ce='9999999' le='9999999'/><detail><contact callsign='Nano'/></detail></event>", cot)
         outbound.release()
         buf.release()
     }
