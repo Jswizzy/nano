@@ -10,10 +10,9 @@ class NanoToCotServer(private val localPort: Int, private val remoteAddress: Ine
     fun start() {
          println("Proxying *: $localPort to ${remoteAddress.address}:${remoteAddress.port}...")
 
-        val bossGroup = NioEventLoopGroup(1)
-        val workerGroup = NioEventLoopGroup()
+        val group = NioEventLoopGroup()
         try {
-            val channelFuture = FrontendServer.start(bossGroup, workerGroup, remoteAddress, localPort)
+            val channelFuture = FrontendServer.start(group, remoteAddress, localPort)
             val future = channelFuture.bind(localPort)
             future.addListener {
                 if (it.isSuccess) {
@@ -25,8 +24,7 @@ class NanoToCotServer(private val localPort: Int, private val remoteAddress: Ine
                 }
             }
         } finally {
-            bossGroup.shutdownGracefully().syncUninterruptibly()
-            workerGroup.shutdownGracefully().syncUninterruptibly()
+            group.shutdownGracefully()
         }
     }
 }

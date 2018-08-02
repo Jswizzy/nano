@@ -4,7 +4,8 @@ import com.arrowmaker.proxy.backend.intialializers.BackendInitializer
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelHandlerContext
-import io.netty.channel.socket.nio.NioSocketChannel
+import io.netty.channel.ChannelOption
+import io.netty.channel.socket.nio.NioDatagramChannel
 import java.net.InetSocketAddress
 
 
@@ -13,7 +14,8 @@ class BackendClient {
         val bootStrap = Bootstrap()
         bootStrap
                 .group(ctx.channel().eventLoop())
-                .channel(NioSocketChannel::class.java)
+                .channel(NioDatagramChannel::class.java)
+                .option(ChannelOption.SO_BROADCAST, true)
                 .handler(BackendInitializer())
                 return bootStrap.connect(remoteAddress)
     }
