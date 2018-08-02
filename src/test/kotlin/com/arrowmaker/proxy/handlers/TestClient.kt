@@ -1,6 +1,5 @@
-package com.arrowmaker.proxy
+package com.arrowmaker.proxy.handlers
 
-import com.arrowmaker.proxy.handlers.NanoToCotEncoder
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.ByteBufUtil
 import io.netty.buffer.Unpooled
@@ -11,7 +10,6 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramPacket
 import io.netty.channel.socket.nio.NioDatagramChannel
 import io.netty.util.internal.SocketUtils
-import java.net.InetSocketAddress
 
 
 fun main(args: Array<String>) {

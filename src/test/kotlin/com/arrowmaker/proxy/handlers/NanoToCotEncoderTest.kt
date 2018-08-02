@@ -1,7 +1,6 @@
-package com.arrowmaker.proxy.codec
+package com.arrowmaker.proxy.handlers
 
-import com.arrowmaker.proxy.handlers.NanoToCotEncoder
-import com.arrowmaker.proxy.model.IpHead
+import com.arrowmaker.proxy.model.nanoMessage.IpHead
 import io.netty.buffer.ByteBufUtil
 import io.netty.buffer.Unpooled
 import io.netty.channel.embedded.EmbeddedChannel
@@ -28,7 +27,6 @@ class NanoToCotEncoderTest {
         assertTrue(channel.finish())
 
         val outbound = channel.readOutbound<DatagramPacket>()
-        //println(ByteBufUtil.prettyHexDump(outbound))
 
         val len = outbound.content().readableBytes()
         val cot = outbound.content().getCharSequence(0, len, Charset.forName("UTF-8"))

@@ -1,8 +1,12 @@
-import com.arrowmaker.proxy.NanoToCotServer
+import com.arrowmaker.proxy.NanoToCot
 import java.net.InetSocketAddress
 
-
+/**
+ * Entry Point into the Proxy Server
+ * Parses command line arguments and starts the proxy server
+ */
 fun main(args: Array<String>) {
+    //parse commandline args
     if (args.size != 3) {
         printUse()
         return
@@ -22,7 +26,10 @@ fun main(args: Array<String>) {
 
     val remoteAddress =   InetSocketAddress(remoteHost, remotePort)
 
-    NanoToCotServer(localPort, remoteAddress).start()
+    //start proxy server
+    NanoToCot(localPort, remoteAddress).start()
 }
 
-fun printUse() = System.err.println("Usage ${NanoToCotServer::class.java.simpleName} <local port> <remote host> <remote port>")
+//prints usage to the console when invalid arguments are supplied to the command line
+private fun printUse() =
+        System.err.println("Usage java -jar ${NanoToCot::class.java.simpleName}.jar <local port> <remote host> <remote port>")

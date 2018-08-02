@@ -1,7 +1,10 @@
-package com.arrowmaker.proxy.model
+package com.arrowmaker.proxy.model.nanoMessage
 
 import io.netty.buffer.ByteBuf
 
+/**
+ * P3 Payload of a nano message
+ */
 data class P3(
         val brevity: Int,
         val pdop: Float,
@@ -12,6 +15,10 @@ data class P3(
         val spd: Float
 ) {
     companion object {
+
+        /**
+         * Factory method for creating P3 Payload from a ByteBuf
+         */
         fun from(byteBuf: ByteBuf): P3 {
             with(byteBuf) {
                 val brevity = readInt()

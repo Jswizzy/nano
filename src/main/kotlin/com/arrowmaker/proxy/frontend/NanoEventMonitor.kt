@@ -3,7 +3,7 @@ package com.arrowmaker.proxy.frontend
 import com.arrowmaker.proxy.backend.IBroadcast
 import com.arrowmaker.proxy.handlers.NanoEventHandler
 import com.arrowmaker.proxy.handlers.NanoDecoder
-import com.arrowmaker.proxy.model.IpHead
+import com.arrowmaker.proxy.model.nanoMessage.IpHead
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.Channel
 import io.netty.channel.ChannelInitializer
@@ -12,7 +12,10 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioDatagramChannel
 import java.net.InetSocketAddress
 
-
+/**
+ * UDP Server that listens for Nano messages and then decodes them to IpHead object and then passes them
+ * the broadcast client for broadcast to a remote server
+ */
 class NanoEventMonitor(address: InetSocketAddress, iBroadcast: IBroadcast<IpHead>) {
     private val group = NioEventLoopGroup()
     private val bootstrap = Bootstrap()

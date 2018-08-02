@@ -1,9 +1,12 @@
-package com.arrowmaker.proxy.model
+package com.arrowmaker.proxy.model.nanoMessage
 
 import io.netty.buffer.ByteBuf
 import java.nio.charset.Charset
 
 
+/**
+ * IpHead of Nano message, has a Main and Payload
+ */
 data class IpHead(
         val revNum: Int,
         val messageLen: Int,
@@ -17,8 +20,11 @@ data class IpHead(
         val time: Int,
         val main: Main) {
     companion object {
+        /**
+         * Factory method for creating IpHead from a ByteBuf
+         */
         fun from(byteBuf: ByteBuf): IpHead {
-            with (byteBuf) {
+            with(byteBuf) {
                 val rev = readByte().toInt()
                 val messageLen = readUnsignedShort()
                 val moHeaderIei = readByte().toInt()

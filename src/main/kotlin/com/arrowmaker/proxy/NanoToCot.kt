@@ -5,10 +5,16 @@ import com.arrowmaker.proxy.frontend.NanoEventMonitor
 import java.net.InetSocketAddress
 
 
-class NanoToCotServer(private val localPort: Int, private val remoteAddress: InetSocketAddress) {
+/**
+ * Class to start the server, nanoEventMonitor, and client, cotEventBroadcaster, and manage them
+ */
+class NanoToCot(private val localPort: Int, private val remoteAddress: InetSocketAddress) {
     private val cotEventBroadcaster = CotEventBroadcaster(remoteAddress)
     private val nanoEventMonitor = NanoEventMonitor(InetSocketAddress(localPort), cotEventBroadcaster)
 
+    /**
+     * starts the server and client
+     */
     fun start() {
         println("Proxying *: $localPort to ${remoteAddress.address}:${remoteAddress.port}...")
 
@@ -20,6 +26,7 @@ class NanoToCotServer(private val localPort: Int, private val remoteAddress: Ine
         }
     }
 
+    //start the server
     private fun bindNanoEventMonitor() {
         try {
             val channel = nanoEventMonitor.bind()
